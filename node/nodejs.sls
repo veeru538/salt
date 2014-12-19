@@ -19,7 +19,9 @@ nodejs:
         ./configure
         make
         make install
-        cd /usr/local/lib
+        /usr/local/bin/npm install amqp -g
+        /usr/local/bin/npm install socket.io -g
+        /usr/local/bin/npm install forever -g
 
 /usr/local/lib/server.js:
   file:
@@ -27,4 +29,14 @@ nodejs:
     - mode: 611
     - source: salt://node/server.js
 
+/etc/init.d/nodejs:
+  file:
+    - managed
+    - mode: 611
+    - source: salt://node/nodejs
 
+runapp:
+  cmd.run:
+    - name: |
+       chkconfig --add nodejs
+       service nodejs start
